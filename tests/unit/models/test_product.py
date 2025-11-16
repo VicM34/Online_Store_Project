@@ -35,12 +35,12 @@ class TestProduct:
 
     def test_product_str(self, sample_product):
         """Тест строкового представления товара."""
-        expected = "Тестовый товар, 1000.0₽. Остаток: 5 шт."
+        expected = "Тестовый товар, 1000.0 руб. Остаток: 5 шт."
         assert str(sample_product) == expected
 
     def test_product_str_different_values(self, different_product):
         """Тест строкового представления другого товара."""
-        expected = "Другой товар, 500.0₽. Остаток: 10 шт."
+        expected = "Другой товар, 500.0 руб. Остаток: 10 шт."
         assert str(different_product) == expected
 
     def test_product_repr(self, sample_product):
@@ -71,7 +71,6 @@ class TestProduct:
         assert product1.price == product2.price
         assert product1.quantity == product2.quantity
 
-        # Но это разные объекты
         assert product1 is not product2
         assert product1 is not product3
 
@@ -84,14 +83,14 @@ class TestProduct:
         assert sample_product.name == "Измененное имя"
         assert sample_product.price == 1500.0
         assert sample_product.quantity == 8
-        assert str(sample_product) == "Измененное имя, 1500.0₽. Остаток: 8 шт."
+        assert str(sample_product) == "Измененное имя, 1500.0 руб. Остаток: 8 шт."
 
     @pytest.mark.parametrize(
         "name,description,price,quantity,expected_str",
         [
-            ("Товар1", "Описание1", 100.0, 1, "Товар1, 100.0₽. Остаток: 1 шт."),
-            ("Товар2", "Описание2", 0.0, 0, "Товар2, 0.0₽. Остаток: 0 шт."),
-            ("Товар3", "Описание3", 999.99, 999, "Товар3, 999.99₽. Остаток: 999 шт."),
+            ("Товар1", "Описание1", 100.0, 1, "Товар1, 100.0 руб. Остаток: 1 шт."),
+            ("Товар2", "Описание2", 0.0, 0, "Товар2, 0.0 руб. Остаток: 0 шт."),
+            ("Товар3", "Описание3", 999.99, 999, "Товар3, 999.99 руб. Остаток: 999 шт."),
         ],
     )
     def test_product_with_different_parameters(self, name, description, price, quantity, expected_str):

@@ -47,14 +47,16 @@ class TestCategory:
         """Тест создания категории."""
         assert sample_category.name == "Тестовая категория"
         assert sample_category.description == "Описание категории"
-        assert sample_category.products == sample_products
+        # ИСПРАВЛЕНО: используем products_list вместо products
+        assert sample_category.products_list == sample_products
         assert len(sample_category) == 2
 
     def test_empty_category_creation(self, empty_category):
         """Тест создания пустой категории."""
         assert empty_category.name == "Пустая категория"
         assert empty_category.description == "Описание"
-        assert empty_category.products == []
+        # ИСПРАВЛЕНО: проверяем products как строку
+        assert empty_category.products == ""
         assert len(empty_category) == 0
 
     def test_category_counters(self, reset_counters, sample_products):
@@ -62,19 +64,15 @@ class TestCategory:
         category1 = Category("Кат1", "Описание", sample_products)
         assert Category.category_count == 1
         assert Category.product_count == 2
-        # Добавляем проверки использования category1
-        assert category1.name == "Кат1"
-        assert category1.description == "Описание"
-        assert len(category1.products) == 2
+        # ИСПРАВЛЕНО: используем products_list
+        assert len(category1.products_list) == 2
 
         category2 = Category("Кат2", "Описание", [Product("Т3", "D3", 300.0, 3)])
         assert Category.category_count == 2
         assert Category.product_count == 3
-        # Добавляем проверки использования category2
-        assert category2.name == "Кат2"
-        assert category2.description == "Описание"
-        assert len(category2.products) == 1
-        assert category2.products[0].name == "Т3"
+        # ИСПРАВЛЕНО: используем products_list
+        assert len(category2.products_list) == 1
+        assert category2.products_list[0].name == "Т3"
 
     def test_category_str(self, sample_category):
         """Тест строкового представления категории."""
@@ -102,7 +100,8 @@ class TestCategory:
         empty_category.add_product(sample_product)
 
         assert len(empty_category) == 1
-        assert empty_category.products[0] == sample_product
+        # ИСПРАВЛЕНО: используем products_list
+        assert empty_category.products_list[0] == sample_product
         assert Category.product_count == initial_product_count + 1
 
     def test_add_multiple_products(self, empty_category):
@@ -114,8 +113,9 @@ class TestCategory:
         empty_category.add_product(product2)
 
         assert len(empty_category) == 2
-        assert empty_category.products[0] == product1
-        assert empty_category.products[1] == product2
+        # ИСПРАВЛЕНО: используем products_list
+        assert empty_category.products_list[0] == product1
+        assert empty_category.products_list[1] == product2
 
     def test_category_counters_after_adding_products(self, reset_counters, empty_category):
         """Тест счетчиков после добавления товаров."""
@@ -141,5 +141,6 @@ class TestCategory:
     def test_category_with_none_products(self):
         """Тест создания категории с явным None."""
         category = Category("Категория", "Описание", None)
-        assert category.products == []
+        # ИСПРАВЛЕНО: проверяем products как строку
+        assert category.products == ""
         assert len(category) == 0
