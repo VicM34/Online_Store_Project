@@ -78,11 +78,11 @@ def print_loaded_data(categories: List[Category]) -> None:
         print(f"Описание: {category.description}")
         print(f"Количество товаров: {len(category)}")
 
-        for j, product in enumerate(category.products, 1):
+        for j, product in enumerate(category.products_list, 1):
             print(f"  {j}. {product.name} - {product.price}₽ (остаток: {product.quantity} шт.)")
 
     print("\n=== ОБЩАЯ СТАТИСТИКА ===")
     print(f"Всего категорий: {len(categories)}")
-    print(f"Всего товаров: {sum(len(category.products) for category in categories)}")
+    print(f"Всего товаров: {sum(len(category.products_list) for category in categories)}")
     print(f"Счетчик категорий: {Category.category_count}")
     print(f"Счетчик товаров: {Category.product_count}")

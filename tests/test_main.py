@@ -33,7 +33,7 @@ class TestMain:
         assert "Всего товаров: 4" in output_str
 
     def test_main_product_prices_displayed(self) -> None:
-        """Тест что цены товаров отображаются корректно."""
+        """Тест, что цены товаров отображаются корректно."""
         output = StringIO()
 
         with redirect_stdout(output):

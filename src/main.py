@@ -42,7 +42,8 @@ def main() -> None:
     print("\n=== Вторая категория ===")
     print(category2)
     print("Товары в категории:")
-    for product in category2.products:
+    # ИСПРАВЛЕНО: используем products_list вместо products
+    for product in category2.products_list:
         print(f"  - {product}")
 
     print("\n=== Общая статистика ===")

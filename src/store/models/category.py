@@ -13,36 +13,47 @@ class Category:
     def __init__(self, name: str, description: str, products: Optional[List[Product]] = None) -> None:
         """
         Инициализация объекта Category.
-
-        Args:
-            name: Название категории
-            description: Описание категории
-            products: Список товаров категории (опционально)
         """
         self.name = name
         self.description = description
-        self.products = products if products is not None else []
+        self.__products = products if products is not None else []  # Приватный атрибут
 
         # Автоматическое обновление атрибутов класса
         Category.category_count += 1
-        Category.product_count += len(self.products)
+        Category.product_count += len(self.__products)
 
     def __str__(self) -> str:
         """Строковое представление категории."""
-        return f"{self.name}, количество товаров: {len(self.products)}"
+        return f"{self.name}, количество товаров: {len(self.__products)}"
 
     def __repr__(self) -> str:
         """Представление для разработчика."""
-        return f"Category('{self.name}', products_count={len(self.products)})"
+        return f"Category('{self.name}', products_count={len(self.__products)})"
 
     def __len__(self) -> int:
         """Количество товаров в категории."""
-        return len(self.products)
+        return len(self.__products)
 
     def add_product(self, product: Product) -> None:
         """Добавить товар в категорию."""
-        self.products.append(product)
-        Category.product_count += 1
+        if isinstance(product, Product):
+            self.__products.append(product)
+            Category.product_count += 1
+        else:
+            raise TypeError("Можно добавлять только объекты класса Product")
+
+    @property
+    def products(self) -> str:
+        """Геттер для получения списка товаров в виде строк (СООТВЕТСТВИЕ ТЗ)."""
+        products_list = []
+        for product in self.__products:
+            products_list.append(str(product))
+        return "\n".join(products_list)
+
+    @property
+    def products_list(self) -> List[Product]:
+        """Геттер для получения списка товаров (для обратной совместимости)."""
+        return self.__products
 
     @classmethod
     def reset_counters(cls) -> None:
