@@ -3,6 +3,29 @@ from typing import List, Optional
 from src.store.models.product import Product
 
 
+class CategoryIterator:
+    """Итератор для перебора товаров в категории."""
+
+    def __init__(self, category: "Category") -> None:
+        """
+        Инициализация итератора.
+        """
+        self.category = category
+        self.index = 0
+
+    def __iter__(self) -> "CategoryIterator":
+        """Возвращает сам итератор."""
+        return self
+
+    def __next__(self) -> Product:
+        """Возвращает следующий товар в категории."""
+        if self.index < len(self.category.products_list):
+            product = self.category.products_list[self.index]
+            self.index += 1
+            return product
+        raise StopIteration
+
+
 class Category:
     """Класс для представления категории товаров."""
 
@@ -23,8 +46,9 @@ class Category:
         Category.product_count += len(self.__products)
 
     def __str__(self) -> str:
-        """Строковое представление категории."""
-        return f"{self.name}, количество товаров: {len(self.__products)}"
+        """Строковое представление категории в формате: Название, количество продуктов: X шт."""
+        total_quantity = sum(product.quantity for product in self.__products)
+        return f"{self.name}, количество продуктов: {total_quantity} шт."
 
     def __repr__(self) -> str:
         """Представление для разработчика."""
@@ -33,6 +57,10 @@ class Category:
     def __len__(self) -> int:
         """Количество товаров в категории."""
         return len(self.__products)
+
+    def __iter__(self) -> CategoryIterator:
+        """Возвращает итератор для перебора товаров категории."""
+        return CategoryIterator(self)
 
     def add_product(self, product: Product) -> None:
         """Добавить товар в категорию."""
@@ -44,11 +72,8 @@ class Category:
 
     @property
     def products(self) -> str:
-        """Геттер для получения списка товаров в виде строк (СООТВЕТСТВИЕ ТЗ)."""
-        products_list = []
-        for product in self.__products:
-            products_list.append(str(product))
-        return "\n".join(products_list)
+        """Геттер для получения списка товаров в виде строк."""
+        return "\n".join(str(product) for product in self.__products)
 
     @property
     def products_list(self) -> List[Product]:

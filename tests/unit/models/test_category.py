@@ -76,13 +76,15 @@ class TestCategory:
 
     def test_category_str(self, sample_category):
         """Тест строкового представления категории."""
-        expected = "Тестовая категория, количество товаров: 2"
+        # ИСПРАВЛЕНО: новый формат с количеством продуктов
+        expected = "Тестовая категория, количество продуктов: 5 шт."  # 2 + 3
         assert str(sample_category) == expected
 
-    def test_category_str_empty(self, empty_category):
+    def test_category_str_empty(self):
         """Тест строкового представления пустой категории."""
-        expected = "Пустая категория, количество товаров: 0"
-        assert str(empty_category) == expected
+        category = Category("Пустая", "Описание")
+        expected = "Пустая, количество продуктов: 0 шт."
+        assert str(category) == expected
 
     def test_category_repr(self, sample_category):
         """Тест представления для разработчика."""
@@ -144,3 +146,36 @@ class TestCategory:
         # ИСПРАВЛЕНО: проверяем products как строку
         assert category.products == ""
         assert len(category) == 0
+
+    def test_category_str_format(self):
+        """Тест строкового представления категории."""
+        product1 = Product("Товар1", "Описание1", 100.0, 2)
+        product2 = Product("Товар2", "Описание2", 200.0, 3)
+        category = Category("Тест", "Описание", [product1, product2])
+
+        expected = "Тест, количество продуктов: 5 шт."  # 2 + 3
+        assert str(category) == expected
+
+    def test_category_iterator(self):
+        """Тест итерации по товарам категории."""
+        product1 = Product("Товар1", "Описание1", 100.0, 2)
+        product2 = Product("Товар2", "Описание2", 200.0, 3)
+        category = Category("Тест", "Описание", [product1, product2])
+
+        products_from_iterator = []
+        for product in category:
+            products_from_iterator.append(product)
+
+        assert len(products_from_iterator) == 2
+        assert products_from_iterator[0] == product1
+        assert products_from_iterator[1] == product2
+
+    def test_category_iterator_empty(self):
+        """Тест итерации по пустой категории."""
+        category = Category("Пустая", "Описание")
+
+        products_from_iterator = []
+        for product in category:
+            products_from_iterator.append(product)
+
+        assert len(products_from_iterator) == 0

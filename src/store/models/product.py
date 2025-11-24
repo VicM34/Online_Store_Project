@@ -11,12 +11,21 @@ class Product:
         self.quantity = quantity
 
     def __str__(self) -> str:
-        """Строковое представление товара."""
-        return f"{self.name}, {self.price} руб. Остаток: {self.quantity} шт."  # ИЗМЕНЕНО: ₽ на руб.
+        """Строковое представление товара в формате: Название, X руб. Остаток: X шт."""
+        return f"{self.name}, {self.price} руб. Остаток: {self.quantity} шт."
 
     def __repr__(self) -> str:
         """Представление для разработчика."""
         return f"Product('{self.name}', {self.price}, {self.quantity})"
+
+    def __add__(self, other: "Product") -> float:
+        """
+        Сложение продуктов - возвращает общую стоимость всех товаров на складе.
+        """
+        if not isinstance(other, Product):
+            raise TypeError("Можно складывать только объекты класса Product")
+
+        return (self.price * self.quantity) + (other.price * other.quantity)
 
     @classmethod
     def new_product(cls, product_data: dict, products_list: Optional[List["Product"]] = None) -> "Product":
