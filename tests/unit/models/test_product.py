@@ -101,3 +101,24 @@ class TestProduct:
         assert product.price == price
         assert product.quantity == quantity
         assert str(product) == expected_str
+
+    def test_product_str_format(self):
+        """Тест строкового представления товара."""
+        product = Product("Телефон", "Смартфон", 1000.0, 5)
+        expected = "Телефон, 1000.0 руб. Остаток: 5 шт."
+        assert str(product) == expected
+
+    def test_product_addition(self):
+        """Тест сложения товаров."""
+        product1 = Product("Товар1", "Описание1", 100.0, 2)  # 100*2 = 200
+        product2 = Product("Товар2", "Описание2", 200.0, 3)  # 200*3 = 600
+
+        total_cost = product1 + product2
+        assert total_cost == 800.0  # 200 + 600
+
+    def test_product_addition_type_error(self):
+        """Тест ошибки при сложении с неправильным типом."""
+        product = Product("Товар", "Описание", 100.0, 2)
+
+        with pytest.raises(TypeError, match="Можно складывать только объекты класса Product"):
+            product + "не товар"
