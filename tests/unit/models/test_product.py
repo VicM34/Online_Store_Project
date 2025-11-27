@@ -172,7 +172,7 @@ class TestLawnGrass:
             quantity=10,
             country="Россия",
             germination_period="14 дней",  # ИЗМЕНЕНО: строка вместо числа
-            color="Зеленый",
+            color="Зеленый"
         )
 
         assert grass.name == "Газонная трава"
@@ -199,4 +199,4 @@ class TestLawnGrass:
         grass2 = LawnGrass("Grass2", "Desc", 300.0, 2, "Rus", "12 дней", "Dark Green")  # ИЗМЕНЕНО
 
         total = grass1 + grass2
-        assert total == 2100.0  # 500*3 + 300*2
+        assert total == 2100.0

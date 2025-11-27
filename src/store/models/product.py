@@ -117,25 +117,15 @@ class Smartphone(Product):
 class LawnGrass(Product):
     """Класс для представления травы газонной."""
 
-    def __init__(
-        self,
-        name: str,
-        description: str,
-        price: float,
-        quantity: int,
-        country: str,
-        germination_period: str,
-        color: str,
-    ) -> None:  # ИЗМЕНЕНО: str вместо int
+    def __init__(self, name: str, description: str, price: float, quantity: int,
+                 country: str, germination_period: str, color: str) -> None:
         super().__init__(name, description, price, quantity)
         self.country = country  # страна-производитель
-        self.germination_period = germination_period  # срок прорастания (строка)
+        self.germination_period = germination_period
         self.color = color  # цвет
 
     def __repr__(self) -> str:
         """Представление для разработчика."""
-        return (
-            f"LawnGrass('{self.name}', {self.price}, {self.quantity}, "
-            f"country='{self.country}', germination_period='{self.germination_period}', "
-            f"color='{self.color}')"
-        )
+        return (f"LawnGrass('{self.name}', {self.price}, {self.quantity}, "
+                f"country='{self.country}', germination_period='{self.germination_period}', "
+                f"color='{self.color}')")
