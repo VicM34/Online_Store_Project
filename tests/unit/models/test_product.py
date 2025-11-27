@@ -1,6 +1,6 @@
 import pytest
 
-from src.store.models import Product
+from src.store.models import LawnGrass, Product, Smartphone
 
 
 @pytest.fixture
@@ -122,3 +122,101 @@ class TestProduct:
 
         with pytest.raises(TypeError, match="Можно складывать только объекты класса Product"):
             product + "не товар"
+
+
+class TestSmartphone:
+    """Тесты для класса Smartphone."""
+
+    def test_smartphone_creation(self):
+        """Тест создания смартфона."""
+        smartphone = Smartphone(
+            name="iPhone 15",
+            description="Новый смартфон",
+            price=100000.0,
+            quantity=5,
+            efficiency=3.5,
+            model="15 Pro",
+            memory=256,
+            color="Black",
+        )
+
+        assert smartphone.name == "iPhone 15"
+        assert smartphone.price == 100000.0
+        assert smartphone.efficiency == 3.5
+        assert smartphone.model == "15 Pro"
+        assert smartphone.memory == 256
+        assert smartphone.color == "Black"
+
+    def test_smartphone_inheritance(self):
+        """Тест что Smartphone наследуется от Product."""
+        smartphone = Smartphone("Test", "Desc", 1000.0, 1, 2.0, "Model", 128, "Black")
+        assert isinstance(smartphone, Product)
+
+    def test_smartphone_repr(self):
+        """Тест представления смартфона."""
+        smartphone = Smartphone("Test", "Desc", 1000.0, 1, 2.0, "Model", 128, "Black")
+        repr_str = repr(smartphone)
+        assert "Smartphone(" in repr_str
+        assert "efficiency=2.0" in repr_str
+
+
+class TestLawnGrass:
+    """Тесты для класса LawnGrass."""
+
+    def test_lawn_grass_creation(self):
+        """Тест создания травы газонной."""
+        grass = LawnGrass(
+            name="Газонная трава",
+            description="Для красивого газона",
+            price=500.0,
+            quantity=10,
+            country="Россия",
+            germination_period=14,
+            color="Зеленый",
+        )
+
+        assert grass.name == "Газонная трава"
+        assert grass.price == 500.0
+        assert grass.country == "Россия"
+        assert grass.germination_period == 14
+        assert grass.color == "Зеленый"
+
+    def test_lawn_grass_inheritance(self):
+        """Тест что LawnGrass наследуется от Product."""
+        grass = LawnGrass("Test", "Desc", 500.0, 1, "Russia", 10, "Green")
+        assert isinstance(grass, Product)
+
+    def test_lawn_grass_repr(self):
+        """Тест представления травы газонной."""
+        grass = LawnGrass("Test", "Desc", 500.0, 1, "Russia", 10, "Green")
+        repr_str = repr(grass)
+        assert "LawnGrass(" in repr_str
+        assert "country='Russia'" in repr_str
+
+
+class TestProductAdditionRestrictions:
+    """Тесты ограничений сложения товаров."""
+
+    def test_add_same_class_products(self):
+        """Тест сложения товаров одного класса."""
+        product1 = Product("Товар1", "Описание", 100.0, 2)
+        product2 = Product("Товар2", "Описание", 200.0, 3)
+
+        total = product1 + product2
+        assert total == 800.0  # 100*2 + 200*3
+
+    def test_add_different_class_products_error(self):
+        """Тест ошибки при сложении товаров разных классов."""
+        smartphone = Smartphone("Phone", "Desc", 1000.0, 1, 2.0, "M", 128, "Black")
+        grass = LawnGrass("Grass", "Desc", 500.0, 1, "Rus", 10, "Green")
+
+        with pytest.raises(TypeError, match="Нельзя складывать товары разных классов"):
+            smartphone + grass
+
+    def test_add_smartphones_same_class(self):
+        """Тест сложения смартфонов одного класса."""
+        phone1 = Smartphone("Phone1", "Desc", 1000.0, 2, 2.0, "M1", 128, "Black")
+        phone2 = Smartphone("Phone2", "Desc", 2000.0, 1, 3.0, "M2", 256, "White")
+
+        total = phone1 + phone2
+        assert total == 4000.0  # 1000*2 + 2000*1
