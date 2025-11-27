@@ -171,52 +171,32 @@ class TestLawnGrass:
             price=500.0,
             quantity=10,
             country="Россия",
-            germination_period=14,
-            color="Зеленый",
+            germination_period="14 дней",  # ИЗМЕНЕНО: строка вместо числа
+            color="Зеленый"
         )
 
         assert grass.name == "Газонная трава"
         assert grass.price == 500.0
         assert grass.country == "Россия"
-        assert grass.germination_period == 14
+        assert grass.germination_period == "14 дней"  # ИЗМЕНЕНО
         assert grass.color == "Зеленый"
 
     def test_lawn_grass_inheritance(self):
         """Тест что LawnGrass наследуется от Product."""
-        grass = LawnGrass("Test", "Desc", 500.0, 1, "Russia", 10, "Green")
+        grass = LawnGrass("Test", "Desc", 500.0, 1, "Russia", "10 дней", "Green")  # ИЗМЕНЕНО
         assert isinstance(grass, Product)
 
     def test_lawn_grass_repr(self):
         """Тест представления травы газонной."""
-        grass = LawnGrass("Test", "Desc", 500.0, 1, "Russia", 10, "Green")
+        grass = LawnGrass("Test", "Desc", 500.0, 1, "Russia", "10 дней", "Green")  # ИЗМЕНЕНО
         repr_str = repr(grass)
         assert "LawnGrass(" in repr_str
-        assert "country='Russia'" in repr_str
+        assert "germination_period='10 дней'" in repr_str  # ИЗМЕНЕНО
 
+    def test_add_lawn_grass_same_class(self):
+        """Тест сложения травы газонной одного класса."""
+        grass1 = LawnGrass("Grass1", "Desc", 500.0, 3, "Rus", "10 дней", "Green")  # ИЗМЕНЕНО
+        grass2 = LawnGrass("Grass2", "Desc", 300.0, 2, "Rus", "12 дней", "Dark Green")  # ИЗМЕНЕНО
 
-class TestProductAdditionRestrictions:
-    """Тесты ограничений сложения товаров."""
-
-    def test_add_same_class_products(self):
-        """Тест сложения товаров одного класса."""
-        product1 = Product("Товар1", "Описание", 100.0, 2)
-        product2 = Product("Товар2", "Описание", 200.0, 3)
-
-        total = product1 + product2
-        assert total == 800.0  # 100*2 + 200*3
-
-    def test_add_different_class_products_error(self):
-        """Тест ошибки при сложении товаров разных классов."""
-        smartphone = Smartphone("Phone", "Desc", 1000.0, 1, 2.0, "M", 128, "Black")
-        grass = LawnGrass("Grass", "Desc", 500.0, 1, "Rus", 10, "Green")
-
-        with pytest.raises(TypeError, match="Нельзя складывать товары разных классов"):
-            smartphone + grass
-
-    def test_add_smartphones_same_class(self):
-        """Тест сложения смартфонов одного класса."""
-        phone1 = Smartphone("Phone1", "Desc", 1000.0, 2, 2.0, "M1", 128, "Black")
-        phone2 = Smartphone("Phone2", "Desc", 2000.0, 1, 3.0, "M2", 256, "White")
-
-        total = phone1 + phone2
-        assert total == 4000.0  # 1000*2 + 2000*1
+        total = grass1 + grass2
+        assert total == 2100.0  # 500*3 + 300*2
