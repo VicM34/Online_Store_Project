@@ -172,7 +172,7 @@ class TestLawnGrass:
             quantity=10,
             country="Россия",
             germination_period="14 дней",  # ИЗМЕНЕНО: строка вместо числа
-            color="Зеленый"
+            color="Зеленый",
         )
 
         assert grass.name == "Газонная трава"
