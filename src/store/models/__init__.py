@@ -1,4 +1,4 @@
 from .category import Category
-from .product import Product
+from .product import LawnGrass, Product, Smartphone
 
-__all__ = ["Product", "Category"]
+__all__ = ["Product", "Smartphone", "LawnGrass", "Category"]

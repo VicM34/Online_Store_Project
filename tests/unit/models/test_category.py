@@ -1,6 +1,6 @@
 import pytest
 
-from src.store.models import Category, Product
+from src.store.models import Category, LawnGrass, Product, Smartphone
 
 
 @pytest.fixture
@@ -179,3 +179,26 @@ class TestCategory:
             products_from_iterator.append(product)
 
         assert len(products_from_iterator) == 0
+
+    def test_add_product_invalid_type_error(self):
+        """Тест что add_product вызывает ошибку при неверном типе."""
+        category = Category("Тест", "Описание")
+
+        with pytest.raises(TypeError, match="Можно добавлять только объекты класса Product или его наследников"):
+            category.add_product("не продукт")
+
+        with pytest.raises(TypeError, match="Можно добавлять только объекты класса Product или его наследников"):
+            category.add_product(123)
+
+    def test_add_product_inherited_classes(self):
+        """Тест что можно добавлять наследников Product."""
+        category = Category("Тест", "Описание")
+        smartphone = Smartphone("Phone", "Desc", 1000.0, 1, 2.0, "M", 128, "Black")
+        grass = LawnGrass("Grass", "Desc", 500.0, 1, "Rus", 10, "Green")
+
+        category.add_product(smartphone)
+        category.add_product(grass)
+
+        assert len(category.products_list) == 2
+        assert smartphone in category.products_list
+        assert grass in category.products_list

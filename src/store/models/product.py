@@ -25,6 +25,9 @@ class Product:
         if not isinstance(other, Product):
             raise TypeError("Можно складывать только объекты класса Product")
 
+        if type(self) is not type(other):
+            raise TypeError("Нельзя складывать товары разных классов")
+
         return (self.price * self.quantity) + (other.price * other.quantity)
 
     @classmethod
@@ -80,3 +83,49 @@ class Product:
                 return
 
         self.__price = new_price
+
+
+class Smartphone(Product):
+    """Класс для представления смартфона."""
+
+    def __init__(
+        self,
+        name: str,
+        description: str,
+        price: float,
+        quantity: int,
+        efficiency: float,
+        model: str,
+        memory: int,
+        color: str,
+    ) -> None:
+        super().__init__(name, description, price, quantity)
+        self.efficiency = efficiency  # производительность
+        self.model = model  # модель
+        self.memory = memory  # объем встроенной памяти
+        self.color = color  # цвет
+
+    def __repr__(self) -> str:
+        """Представление для разработчика."""
+        return (
+            f"Smartphone('{self.name}', {self.price}, {self.quantity}, "
+            f"efficiency={self.efficiency}, model='{self.model}', "
+            f"memory={self.memory}, color='{self.color}')"
+        )
+
+
+class LawnGrass(Product):
+    """Класс для представления травы газонной."""
+
+    def __init__(self, name: str, description: str, price: float, quantity: int,
+                 country: str, germination_period: str, color: str) -> None:
+        super().__init__(name, description, price, quantity)
+        self.country = country  # страна-производитель
+        self.germination_period = germination_period
+        self.color = color  # цвет
+
+    def __repr__(self) -> str:
+        """Представление для разработчика."""
+        return (f"LawnGrass('{self.name}', {self.price}, {self.quantity}, "
+                f"country='{self.country}', germination_period='{self.germination_period}', "
+                f"color='{self.color}')")

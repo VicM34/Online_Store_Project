@@ -1,6 +1,6 @@
 import pytest
 
-from src.store.models import Product
+from src.store.models import LawnGrass, Product, Smartphone
 
 
 @pytest.fixture
@@ -122,3 +122,81 @@ class TestProduct:
 
         with pytest.raises(TypeError, match="Можно складывать только объекты класса Product"):
             product + "не товар"
+
+
+class TestSmartphone:
+    """Тесты для класса Smartphone."""
+
+    def test_smartphone_creation(self):
+        """Тест создания смартфона."""
+        smartphone = Smartphone(
+            name="iPhone 15",
+            description="Новый смартфон",
+            price=100000.0,
+            quantity=5,
+            efficiency=3.5,
+            model="15 Pro",
+            memory=256,
+            color="Black",
+        )
+
+        assert smartphone.name == "iPhone 15"
+        assert smartphone.price == 100000.0
+        assert smartphone.efficiency == 3.5
+        assert smartphone.model == "15 Pro"
+        assert smartphone.memory == 256
+        assert smartphone.color == "Black"
+
+    def test_smartphone_inheritance(self):
+        """Тест что Smartphone наследуется от Product."""
+        smartphone = Smartphone("Test", "Desc", 1000.0, 1, 2.0, "Model", 128, "Black")
+        assert isinstance(smartphone, Product)
+
+    def test_smartphone_repr(self):
+        """Тест представления смартфона."""
+        smartphone = Smartphone("Test", "Desc", 1000.0, 1, 2.0, "Model", 128, "Black")
+        repr_str = repr(smartphone)
+        assert "Smartphone(" in repr_str
+        assert "efficiency=2.0" in repr_str
+
+
+class TestLawnGrass:
+    """Тесты для класса LawnGrass."""
+
+    def test_lawn_grass_creation(self):
+        """Тест создания травы газонной."""
+        grass = LawnGrass(
+            name="Газонная трава",
+            description="Для красивого газона",
+            price=500.0,
+            quantity=10,
+            country="Россия",
+            germination_period="14 дней",  # ИЗМЕНЕНО: строка вместо числа
+            color="Зеленый"
+        )
+
+        assert grass.name == "Газонная трава"
+        assert grass.price == 500.0
+        assert grass.country == "Россия"
+        assert grass.germination_period == "14 дней"  # ИЗМЕНЕНО
+        assert grass.color == "Зеленый"
+
+    def test_lawn_grass_inheritance(self):
+        """Тест что LawnGrass наследуется от Product."""
+        grass = LawnGrass("Test", "Desc", 500.0, 1, "Russia", "10 дней", "Green")  # ИЗМЕНЕНО
+        assert isinstance(grass, Product)
+
+    def test_lawn_grass_repr(self):
+        """Тест представления травы газонной."""
+        grass = LawnGrass("Test", "Desc", 500.0, 1, "Russia", "10 дней", "Green")  # ИЗМЕНЕНО
+        repr_str = repr(grass)
+        assert "LawnGrass(" in repr_str
+        assert "germination_period='10 дней'" in repr_str  # ИЗМЕНЕНО
+
+    def test_add_lawn_grass_same_class(self):
+        """Тест сложения травы газонной одного класса."""
+        grass1 = LawnGrass("Grass1", "Desc", 500.0, 3, "Rus", "10 дней", "Green")  # ИЗМЕНЕНО
+        grass2 = LawnGrass("Grass2", "Desc", 300.0, 2, "Rus", "12 дней", "Dark Green")  # ИЗМЕНЕНО
+
+        total = grass1 + grass2
+        assert total == 2100.0
