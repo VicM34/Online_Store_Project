@@ -1,12 +1,13 @@
-from typing import Optional, List, Iterator
-from src.store.models.product import Product
+from typing import Iterator, List, Optional
+
 from src.store.models.countable import Countable
+from src.store.models.product import Product, ZeroQuantityError
 
 
 class CategoryIterator:
     """Итератор для перебора товаров в категории."""
 
-    def __init__(self, category: 'Category') -> None:
+    def __init__(self, category: "Category") -> None:
         self.category = category
         self.index = 0
 
@@ -53,11 +54,39 @@ class Category(Countable):
     def __iter__(self) -> Iterator[Product]:
         return CategoryIterator(self)
 
+    def get_average_price(self) -> float:
+        """
+        Возвращает среднюю цену всех товаров в категории.
+        """
+        if not self.__products:
+            return 0.0
+
+        total_price = float(sum(product.price for product in self.__products))
+
+        try:
+            return total_price / len(self.__products)
+        except ZeroDivisionError:
+            return 0.0
+
     def add_product(self, product: Product) -> None:
-        if not isinstance(product, Product):
-            raise TypeError("Можно добавлять только объекты класса Product или его наследников")
-        self.__products.append(product)
-        Category.product_count += 1
+        """Добавляет товар в категорию с обработкой исключений."""
+        try:
+            if not isinstance(product, Product):
+                raise TypeError("Можно добавлять только объекты класса Product или его наследников")
+
+            if product.quantity <= 0:
+                raise ZeroQuantityError(f"Товар '{product.name}' имеет нулевое количество")
+
+            self.__products.append(product)
+            Category.product_count += 1
+            print(f"Товар '{product.name}' успешно добавлен в категорию '{self.name}'")
+
+        except (TypeError, ZeroQuantityError) as e:
+            print(f"Ошибка добавления товара: {e}")
+            raise
+
+        finally:
+            print("Обработка добавления товара завершена")
 
     @property
     def products(self) -> str:

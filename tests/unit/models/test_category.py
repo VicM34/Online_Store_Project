@@ -202,3 +202,46 @@ class TestCategory:
         assert len(category.products_list) == 2
         assert smartphone in category.products_list
         assert grass in category.products_list
+
+
+class TestCategoryNewFeatures:
+    """Тесты для новой функциональности класса Category."""
+
+    def test_get_average_price_with_products(self):
+        """Тест: средняя цена для категории с товарами."""
+        product1 = Product("Товар 1", "Описание 1", 100.0, 5)
+        product2 = Product("Товар 2", "Описание 2", 200.0, 3)
+        product3 = Product("Товар 3", "Описание 3", 300.0, 2)
+
+        category = Category("Тестовая категория", "Описание", [product1, product2, product3])
+
+        assert category.get_average_price() == 200.0
+
+    def test_get_average_price_empty_category(self):
+        """Тест: средняя цена для пустой категории возвращает 0."""
+        category = Category("Пустая категория", "Описание")
+
+        assert category.get_average_price() == 0
+
+    def test_get_average_price_single_product(self):
+        """Тест: средняя цена для категории с одним товаром."""
+        product = Product("Единственный товар", "Описание", 500.0, 2)
+        category = Category("Категория с одним товаром", "Описание", [product])
+
+        assert category.get_average_price() == 500.0
+
+    def test_get_average_price_zero_price_product(self):
+        """Тест: средняя цена с товаром нулевой стоимости."""
+        product1 = Product("Товар 1", "Описание", 0.0, 5)
+        product2 = Product("Товар 2", "Описание", 200.0, 3)
+        category = Category("Тест", "Описание", [product1, product2])
+
+        assert category.get_average_price() == 100.0  # (0 + 200) / 2 = 100
+
+    def test_add_product_with_zero_quantity_custom_error(self):
+        """Тест: добавление товара с нулевым количеством (доп. задание)."""
+
+        with pytest.raises(ValueError) as exc_info:
+            Product("Товар", "Описание", 100.0, 0)
+
+        assert "не может быть добавлен" in str(exc_info.value)

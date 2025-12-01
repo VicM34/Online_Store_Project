@@ -1,7 +1,34 @@
-import pytest
 from abc import ABC
 
-from src.store.models.product import BaseProduct, Product, Smartphone, LawnGrass, CreationLoggerMixin
+import pytest
+
+from src.store.models.product import BaseProduct, CreationLoggerMixin, LawnGrass, Product, Smartphone
+
+
+class TestProductNewFeatures:
+    """Тесты для новой функциональности класса Product."""
+
+    def test_product_init_with_zero_quantity_raises_valueerror(self):
+        """Тест: создание товара с нулевым количеством вызывает ValueError."""
+        with pytest.raises(ValueError) as exc_info:
+            Product("Тестовый товар", "Описание", 100.0, 0)
+
+        assert str(exc_info.value) == "Товар с нулевым количеством не может быть добавлен"
+
+    def test_product_init_with_negative_quantity_raises_valueerror(self):
+        """Тест: создание товара с отрицательным количеством вызывает ValueError."""
+        with pytest.raises(ValueError) as exc_info:
+            Product("Тестовый товар", "Описание", 100.0, -5)
+
+        assert str(exc_info.value) == "Товар с нулевым количеством не может быть добавлен"
+
+    def test_product_init_with_positive_quantity_success(self):
+        """Тест: успешное создание товара с положительным количеством."""
+        product = Product("Тестовый товар", "Описание", 100.0, 5)
+
+        assert product.name == "Тестовый товар"
+        assert product.quantity == 5
+        assert product.price == 100.0
 
 
 class TestBaseProduct:
@@ -15,12 +42,11 @@ class TestBaseProduct:
         """Тест что Product реализует все абстрактные методы BaseProduct."""
         product = Product("Тест", "Описание", 100.0, 5)
 
-        # Проверяем что все абстрактные методы реализованы
-        assert hasattr(product, '__init__')
-        assert hasattr(product, '__str__')
-        assert hasattr(product, '__repr__')
-        assert hasattr(product, '__add__')
-        assert hasattr(product, 'price')
+        assert hasattr(product, "__init__")
+        assert hasattr(product, "__str__")
+        assert hasattr(product, "__repr__")
+        assert hasattr(product, "__add__")
+        assert hasattr(product, "price")
 
     def test_cannot_instantiate_base_product(self):
         """Тест что нельзя создать экземпляр BaseProduct."""
