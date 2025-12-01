@@ -1,5 +1,5 @@
-from typing import Optional, List, Any
 from abc import ABC, abstractmethod
+from typing import Any, List, Optional
 
 
 class CreationLoggerMixin:
@@ -12,6 +12,12 @@ class CreationLoggerMixin:
         class_name = self.__class__.__name__
         params = ", ".join([repr(arg) for arg in args])
         print(f"Создан объект {class_name}({params})")
+
+
+class ZeroQuantityError(Exception):
+    """Пользовательское исключение для товаров с нулевым количеством."""
+
+    pass
 
 
 class BaseProduct(ABC):
@@ -54,6 +60,10 @@ class Product(CreationLoggerMixin, BaseProduct):
 
     def __init__(self, name: str, description: str, price: float, quantity: int) -> None:
         super().__init__(name, description, price, quantity)
+
+        if quantity <= 0:
+            raise ValueError("Товар с нулевым количеством не может быть добавлен")
+
         self.name = name
         self.description = description
         self.__price = price
@@ -67,7 +77,7 @@ class Product(CreationLoggerMixin, BaseProduct):
         """Представление для разработчика."""
         return f"Product('{self.name}', '{self.description}', {self.price}, {self.quantity})"
 
-    def __add__(self, other: 'Product') -> float:
+    def __add__(self, other: "Product") -> float:
         """
         Сложение продуктов - возвращает общую стоимость всех товаров на складе.
         """
@@ -81,14 +91,14 @@ class Product(CreationLoggerMixin, BaseProduct):
         return (self.price * self.quantity) + (other.price * other.quantity)
 
     @classmethod
-    def new_product(cls, product_data: dict, products_list: Optional[List['Product']] = None) -> 'Product':
+    def new_product(cls, product_data: dict, products_list: Optional[List["Product"]] = None) -> "Product":
         """
         Создает новый товар или обновляет существующий.
         """
-        name = product_data.get('name')
-        description = product_data.get('description', '')
-        price = product_data.get('price', 0)
-        quantity = product_data.get('quantity', 0)
+        name = product_data.get("name")
+        description = product_data.get("description", "")
+        price = product_data.get("price", 0)
+        quantity = product_data.get("quantity", 0)
 
         # Проверка обязательных полей
         if not name:
@@ -128,7 +138,7 @@ class Product(CreationLoggerMixin, BaseProduct):
         # Подтверждение понижения цены
         if new_price < self.__price:
             confirmation = input(f"Цена понижается с {self.__price} до {new_price}. Подтвердите (y/n): ")
-            if confirmation.lower() != 'y':
+            if confirmation.lower() != "y":
                 print("Изменение цены отменено")
                 return
 
@@ -138,8 +148,17 @@ class Product(CreationLoggerMixin, BaseProduct):
 class Smartphone(Product):
     """Класс для представления смартфона."""
 
-    def __init__(self, name: str, description: str, price: float, quantity: int,
-                 efficiency: float, model: str, memory: int, color: str) -> None:
+    def __init__(
+        self,
+        name: str,
+        description: str,
+        price: float,
+        quantity: int,
+        efficiency: float,
+        model: str,
+        memory: int,
+        color: str,
+    ) -> None:
         super().__init__(name, description, price, quantity)
         self.efficiency = efficiency
         self.model = model
@@ -148,16 +167,26 @@ class Smartphone(Product):
 
     def __repr__(self) -> str:
         """Представление для разработчика."""
-        return (f"Smartphone('{self.name}', '{self.description}', {self.price}, {self.quantity}, "
-                f"efficiency={self.efficiency}, model='{self.model}', "
-                f"memory={self.memory}, color='{self.color}')")
+        return (
+            f"Smartphone('{self.name}', '{self.description}', {self.price}, {self.quantity}, "
+            f"efficiency={self.efficiency}, model='{self.model}', "
+            f"memory={self.memory}, color='{self.color}')"
+        )
 
 
 class LawnGrass(Product):
     """Класс для представления травы газонной."""
 
-    def __init__(self, name: str, description: str, price: float, quantity: int,
-                 country: str, germination_period: str, color: str) -> None:
+    def __init__(
+        self,
+        name: str,
+        description: str,
+        price: float,
+        quantity: int,
+        country: str,
+        germination_period: str,
+        color: str,
+    ) -> None:
         super().__init__(name, description, price, quantity)
         self.country = country
         self.germination_period = germination_period
@@ -165,6 +194,8 @@ class LawnGrass(Product):
 
     def __repr__(self) -> str:
         """Представление для разработчика."""
-        return (f"LawnGrass('{self.name}', '{self.description}', {self.price}, {self.quantity}, "
-                f"country='{self.country}', germination_period='{self.germination_period}', "
-                f"color='{self.color}')")
+        return (
+            f"LawnGrass('{self.name}', '{self.description}', {self.price}, {self.quantity}, "
+            f"country='{self.country}', germination_period='{self.germination_period}', "
+            f"color='{self.color}')"
+        )
